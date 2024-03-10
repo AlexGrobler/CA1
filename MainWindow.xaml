@@ -49,7 +49,8 @@
                 <TextBox Grid.Column="1" Grid.Row="0" DockPanel.Dock="Right" VerticalAlignment="Center" Height="28"></TextBox>
 
                 <Label Grid.Column="0" Grid.Row="1" DockPanel.Dock="Left" VerticalAlignment="Center" Content="Capacity" ></Label>
-                <Slider  Grid.Column="1"  Grid.Row="1" DockPanel.Dock="Right" VerticalAlignment="Center" ></Slider>
+                <Slider  Grid.Column="1"  Grid.Row="1" DockPanel.Dock="Right" VerticalAlignment="Center"
+                         Minimum="0" Maximum="20" Value="0" TickFrequency="1" IsSnapToTickEnabled="True" TickPlacement="TopLeft"></Slider>
 
                 <Button  Grid.Column="1" Grid.Row="2" Margin="0 10 0 10" Width="80px" VerticalAlignment="Center" Content="Add Ward" ></Button>
             </Grid>
