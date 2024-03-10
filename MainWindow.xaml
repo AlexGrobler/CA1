@@ -6,23 +6,34 @@
         xmlns:local="clr-namespace:CA1"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="1.2*"/>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="1.25*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="0.025*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="0.65*" />
         </Grid.ColumnDefinitions>
 
+        <!-- Ward Label -->
+        <Border Grid.Column="0" Grid.Row="0" Style="{StaticResource TitleStyle}">
+            <Border.Background>
+                <LinearGradientBrush  StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="White" Offset="0.0"/>
+                    <GradientStop Color="LightGreen" Offset="0.8"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Label VerticalAlignment="Center" Content="Ward List (0)"></Label>
+        </Border>
         <!-- Ward Listbox -->
-        <Label Grid.Column="0" Grid.Row="0"  Content="Ward List (0)"></Label>
-        <ListBox  Grid.Column="0" Grid.Row="1"></ListBox>
+        <ListBox  Grid.Column="0" Grid.Row="1" Style="{StaticResource ListBoxStyle}"></ListBox>
         <!-- Ward Exander -->
-        <Expander Grid.Column="0" Grid.Row="2" Header="Add A New Ward">
+        <Expander Grid.Column="0" Grid.Row="2" Style="{StaticResource ExpanderStyle}" Header="Add A New Ward">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -34,22 +45,33 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Column="0" Grid.Row="0" Content="First Label" DockPanel.Dock="Left"></Label>
-                <TextBox Grid.Column="1"  Grid.Row="0" DockPanel.Dock="Right"></TextBox>
+                <Label Grid.Column="0" Grid.Row="0" DockPanel.Dock="Left" VerticalAlignment="Center" Content="Name" ></Label>
+                <TextBox Grid.Column="1" Grid.Row="0" DockPanel.Dock="Right" VerticalAlignment="Center" Height="28"></TextBox>
 
-                <Label Grid.Column="0"  Grid.Row="1" Content="Second Label" DockPanel.Dock="Left"></Label>
-                <Slider  Grid.Column="1"  Grid.Row="1" DockPanel.Dock="Right"></Slider>
+                <Label Grid.Column="0" Grid.Row="1" DockPanel.Dock="Left" VerticalAlignment="Center" Content="Capacity" ></Label>
+                <Slider  Grid.Column="1"  Grid.Row="1" DockPanel.Dock="Right" VerticalAlignment="Center" ></Slider>
 
-
-                <Button  Grid.Column="1"  Grid.Row="2" Margin="0 10 0 10" Content="Add Ward" Width="80px"></Button>
+                <Button  Grid.Column="1" Grid.Row="2" Margin="0 10 0 10" Width="80px" VerticalAlignment="Center" Content="Add Ward" ></Button>
             </Grid>
         </Expander>
 
+        <!-- Spacer -->
+        <Border Grid.Column="1" Grid.RowSpan="3" Background="WhiteSmoke"></Border>
+
+        <!-- Patient Label -->
+        <Border Grid.Column="2" Grid.Row="0" Style="{StaticResource TitleStyle}">
+            <Border.Background>
+                <LinearGradientBrush  StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="White" Offset="0.0"/>
+                    <GradientStop Color="LightGreen" Offset="0.8"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Label VerticalAlignment="Center" Content="Patients"></Label>
+        </Border>
         <!-- Patient Lisbox -->
-        <Label Grid.Column="1" Grid.Row="0" Content="Patients"></Label>
-        <ListBox  Grid.Column="0" Grid.Row="1"></ListBox>
+        <ListBox  Grid.Column="2" Grid.Row="1" Style="{StaticResource ListBoxStyle}"></ListBox>
         <!-- Patient Exander -->
-        <Expander Grid.Column="1" Grid.Row="2" Header="Add A New Patient">
+        <Expander Grid.Column="2" Grid.Row="2" Style="{StaticResource ExpanderStyle}" Header="Add A New Patient">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -62,33 +84,37 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Column="0" Grid.Row="0" Content="Name" DockPanel.Dock="Left"></Label>
-                <TextBox Grid.Column="1"  Grid.Row="0" ></TextBox>
+                <Label Grid.Column="0" Grid.Row="0" DockPanel.Dock="Left" VerticalAlignment="Center" Content="Name"></Label>
+                <TextBox Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Height="28"></TextBox>
 
+                <Label Grid.Column="0" Grid.Row="1" DockPanel.Dock="Left" VerticalAlignment="Center" Content="DOB" ></Label>
+                <DatePicker Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Height="28"></DatePicker>
 
-                <Label Grid.Column="0" Grid.Row="1" Content="DOB" DockPanel.Dock="Left"></Label>
-                <DatePicker Grid.Column="1" Grid.Row="1"></DatePicker>
-
-
-                <Label Grid.Column="0" Grid.Row="2" Content="Blood Type" DockPanel.Dock="Left"></Label>
+                <Label Grid.Column="0" Grid.Row="2" DockPanel.Dock="Left" VerticalAlignment="Center" Content="Blood Type"></Label>
                 <StackPanel HorizontalAlignment="Center"  VerticalAlignment="Center" Orientation="Horizontal"  Grid.Column="1" Grid.Row="2">
                     <RadioButton Content="A" Margin="0 0 10 0"></RadioButton>
                     <RadioButton Content="B" Margin="0 0 10 0"></RadioButton>
                     <RadioButton Content="AB" Margin="0 0 10 0"></RadioButton>
                     <RadioButton Content="O"></RadioButton>
                 </StackPanel>
-
-
                 <Button Grid.Column="1" Grid.Row="3" Margin="0 5 0 5" Content="Add Patient" Width="180px"></Button>
             </Grid>
         </Expander>
     
         <!-- Details -->
-        <Label Grid.Column="2" Grid.Row="0" Content="Details"></Label>
-        <Image Grid.Column="2" Grid.Row="1"></Image>
-        <StackPanel VerticalAlignment="Bottom"  Grid.Column="2" Grid.Row="2">
-            <Button  Content="Load"></Button>
-            <Button  Content="Save"></Button>
+        <Border  Grid.Column="3" Grid.Row="0" Style="{StaticResource TitleStyle}">
+            <Border.Background>
+                <LinearGradientBrush  StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="White" Offset="0.0"/>
+                    <GradientStop Color="LightGreen" Offset="0.8"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Label VerticalAlignment="Center" Content="Details"></Label>
+        </Border>
+        <Image Grid.Column="3" Grid.Row="1"></Image>
+        <StackPanel Grid.Column="3" Grid.Row="2" VerticalAlignment="Bottom" Margin="5">
+            <Button Width="80" Margin="0 0 0 8" Content="Load"></Button>
+            <Button Width="80" Margin="1" Content="Save"></Button>
         </StackPanel>
         
     </Grid>
