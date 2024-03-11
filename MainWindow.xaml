@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CA1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="460" Width="800"
+        Loaded="Window_Loaded">
     
     <Grid>
         <Grid.RowDefinitions>
@@ -21,14 +22,14 @@
         </Grid.ColumnDefinitions>
 
         <!-- Ward Label -->
-        <Border Grid.Column="0" Grid.Row="0" Style="{StaticResource TitleStyle}">
+        <Border Grid.Column="0" Grid.Row="0" Style="{StaticResource TitleBorderStyle}">
             <Border.Background>
                 <LinearGradientBrush  StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Color="White" Offset="0.0"/>
                     <GradientStop Color="LightGreen" Offset="0.8"/>
                 </LinearGradientBrush>
             </Border.Background>
-            <Label Name="wardLabel" VerticalAlignment="Center" Content="Ward List (0)"></Label>
+            <Label Name="wardLabel" Style="{StaticResource TitleStyle}" VerticalAlignment="Center" Content="Ward List (0)"></Label>
         </Border>
         <!-- Ward Listbox -->
         <ListBox Name="wardListBx"  Grid.Column="0" Grid.Row="1" Style="{StaticResource ListBoxStyle}" SelectionChanged="wardListBx_SelectionChanged"></ListBox>
@@ -45,14 +46,23 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Column="0" Grid.Row="0" DockPanel.Dock="Left" VerticalAlignment="Center" Content="Name" ></Label>
-                <TextBox Name="wardNameTxtBx" Grid.Column="1" Grid.Row="0" DockPanel.Dock="Right" VerticalAlignment="Center" Height="28"></TextBox>
+                <Label Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Content="Name" ></Label>
+                <TextBox Name="wardNameTxtBx" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Height="28"></TextBox>
 
-                <Label Grid.Column="0" Grid.Row="1" DockPanel.Dock="Left" VerticalAlignment="Center" Content="Capacity" ></Label>
-                <Slider Name="wardCapacitySldr"  Grid.Column="1"  Grid.Row="1" DockPanel.Dock="Right" VerticalAlignment="Center"
-                         Minimum="0" Maximum="20" Value="0" TickFrequency="1" IsSnapToTickEnabled="True" TickPlacement="TopLeft"></Slider>
-
-                <Button Name="addWardBtn"  Grid.Column="1" Grid.Row="2" Margin="0 10 0 10" Width="80px" VerticalAlignment="Center" Content="Add Ward" ></Button>
+                <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Label Content="Capacity:"></Label>
+                    <Label Content="{Binding Path=Value, ElementName=wardCapacitySldr}"></Label>
+                </StackPanel>
+ 
+                
+                <Slider Name="wardCapacitySldr"  Grid.Column="1"  Grid.Row="1" VerticalAlignment="Center"
+                         Minimum="1" Maximum="20" Value="1" TickFrequency="1" IsSnapToTickEnabled="True" TickPlacement="TopLeft"
+                        ToolTipService.ToolTip="{Binding Path=Value, ElementName=wardCapacitySldr}">
+                </Slider>
+                <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
+                    <Button Name="addWardBtn"  Width="80px" Height="25px"  Margin="0 5 15 5" Content="Add Ward" Click="addWardBtn_Click" ></Button>
+                    <Button Name="removeDataBtn" Width="85px" Height="25px" Margin="0 5 0 5" Content="Remove Ward" Click="removeDataBtn_Click"></Button>
+                </StackPanel>
             </Grid>
         </Expander>
 
@@ -60,17 +70,17 @@
         <Border Grid.Column="1" Grid.RowSpan="3" Background="WhiteSmoke"></Border>
 
         <!-- Patient Label -->
-        <Border Grid.Column="2" Grid.Row="0" Style="{StaticResource TitleStyle}">
+        <Border Grid.Column="2" Grid.Row="0" Style="{StaticResource TitleBorderStyle}">
             <Border.Background>
                 <LinearGradientBrush  StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Color="White" Offset="0.0"/>
                     <GradientStop Color="LightGreen" Offset="0.8"/>
                 </LinearGradientBrush>
             </Border.Background>
-            <Label VerticalAlignment="Center" Content="Patients"></Label>
+            <Label  Style="{StaticResource TitleStyle}" VerticalAlignment="Center" Content="Patients"></Label>
         </Border>
         <!-- Patient Lisbox -->
-        <ListBox Name="patientListBx"  Grid.Column="2" Grid.Row="1" Style="{StaticResource ListBoxStyle}" SelectionChanged="patientListBx_SelectionChanged"></ListBox>
+        <ListBox Name="patientListBx" Grid.Column="2" Grid.Row="1" Style="{StaticResource ListBoxStyle}" SelectionChanged="patientListBx_SelectionChanged"></ListBox>
         <!-- Patient Exander -->
         <Expander Grid.Column="2" Grid.Row="2" Style="{StaticResource ExpanderStyle}" Header="Add A New Patient">
             <Grid>
@@ -85,36 +95,39 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Column="0" Grid.Row="0" DockPanel.Dock="Left" VerticalAlignment="Center" Content="Name"></Label>
+                <Label Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Content="Name"></Label>
                 <TextBox Name="patientNameTxtBx" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Height="28"></TextBox>
 
-                <Label Grid.Column="0" Grid.Row="1" DockPanel.Dock="Left" VerticalAlignment="Center" Content="DOB" ></Label>
+                <Label Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Content="DOB" ></Label>
                 <DatePicker Name="datePicker" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Height="28"></DatePicker>
 
-                <Label Grid.Column="0" Grid.Row="2" DockPanel.Dock="Left" VerticalAlignment="Center" Content="Blood Type"></Label>
+                <Label Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Content="Blood Type"></Label>
                 <StackPanel HorizontalAlignment="Center"  VerticalAlignment="Center" Orientation="Horizontal"  Grid.Column="1" Grid.Row="2">
-                    <RadioButton Name="bloodA_btn" Content="A" Margin="0 0 10 0"></RadioButton>
-                    <RadioButton Name="bloodB_btn" Content="B" Margin="0 0 10 0"></RadioButton>
-                    <RadioButton Name="bloodAB_btn" Content="AB" Margin="0 0 10 0"></RadioButton>
-                    <RadioButton Name="bloodO_btn" Content="O"></RadioButton>
+                    <RadioButton Name="bloodA_btn" GroupName="BloodType" Content="A" Margin="0 0 10 0"></RadioButton>
+                    <RadioButton Name="bloodB_btn" GroupName="BloodType" Content="B" Margin="0 0 10 0"></RadioButton>
+                    <RadioButton Name="bloodAB_btn" GroupName="BloodType" Content="AB" Margin="0 0 10 0"></RadioButton>
+                    <RadioButton Name="bloodO_btn" GroupName="BloodType" Content="O"></RadioButton>
                 </StackPanel>
-                <Button Name="addPatientBtn" Grid.Column="1" Grid.Row="3" Margin="0 5 0 5" Content="Add Patient" Width="180px"></Button>
+                <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal" >
+                    <Button Name="addPatientBtn"  Margin="0 5 10 5" Content="Add Patient" Width="80px" Height="25px" Click="addPatientBtn_Click"></Button>
+                    <Button Name="removePatientBtn"  Margin="0 5 0 5" Content="Remove Patient" Width="90px"  Height="25px" Click="removePatientBtn_Click"></Button>
+                </StackPanel>
             </Grid>
         </Expander>
     
         <!-- Details -->
-        <Border  Grid.Column="3" Grid.Row="0" Style="{StaticResource TitleStyle}">
+        <Border  Grid.Column="3" Grid.Row="0" Style="{StaticResource TitleBorderStyle}">
             <Border.Background>
                 <LinearGradientBrush  StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Color="White" Offset="0.0"/>
                     <GradientStop Color="LightGreen" Offset="0.8"/>
                 </LinearGradientBrush>
             </Border.Background>
-            <Label VerticalAlignment="Center" Content="Details"></Label>
+            <Label Style="{StaticResource TitleStyle}" VerticalAlignment="Center" Content="Details"></Label>
         </Border>
-        <StackPanel Grid.Column="3" Grid.Row="1">
-            <Label Name="patientNameLbl" Content="Name" HorizontalAlignment="Center" Margin="0 5 0 10"></Label>
-            <Image Name="bloodTypeImg" Width="100" Height="Auto" Stretch="Uniform"></Image>
+        <StackPanel Grid.Column="3" Grid.Row="1" Margin="5">
+            <Label Name="patientNameLbl" Content="" HorizontalAlignment="Center" Margin="0"></Label>
+            <Image Name="bloodTypeImg" MaxHeight="250" MaxWidth="250"  Stretch="Uniform" StretchDirection="UpOnly" Margin="5"></Image>
         </StackPanel>
 
         <StackPanel Grid.Column="3" Grid.Row="2" VerticalAlignment="Bottom" Margin="5">

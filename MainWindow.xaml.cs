@@ -17,6 +17,8 @@ using Newtonsoft.Json;
 using System.IO;
 using Path = System.IO.Path;
 using System.Reflection;
+using System.Globalization;
+using System.ComponentModel;
 
 namespace CA1
 {
@@ -25,60 +27,106 @@ namespace CA1
     /// </summary>
     public partial class MainWindow : Window
     {
-
         private ObservableCollection<Ward> wards = new ObservableCollection<Ward>();
-        private static string appDirectory = "";
-        private static string jsonFilePath = "";
         private static int wardCount = 0;
 
+        private static string appDirectory = "";
+        private static string jsonFilePath = "";
+
+        //initialization
         public MainWindow()
         {
             InitializeComponent();
-
-            appDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            jsonFilePath = Path.Combine(appDirectory, "..", "..","data","data.json");
-;
-
+   
+            //get directory of app, and json data
+            try 
+            {
+                appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                jsonFilePath = Path.Combine(appDirectory, "..", "..", "data", "data.json");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed To Get File Directory, See Error Code: " + ex);
+            }
         }
 
+        //on window load
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            initializeData();
+            deserializeData();
         }
 
-        private void initializeData() 
+        //deserializes data from json file, sets listbox source and updates ward count.
+        private void deserializeData() 
         {
-            string jsonContent = File.ReadAllText(jsonFilePath);
-            wards = JsonConvert.DeserializeObject<ObservableCollection<Ward>>(jsonContent);
-            wardListBx.ItemsSource = wards;
-            wardCount = wards.Count;
-            wardLabel.Content = $"Wards ({wardCount})";
+            try
+            {
+                string jsonContent = File.ReadAllText(jsonFilePath);
+                wards = JsonConvert.DeserializeObject<ObservableCollection<Ward>>(jsonContent);
+                wardListBx.ItemsSource = wards;
+                wardListBx.SelectedItem = wards[0];
+                updateWardCount();
+            }
+            catch (Exception ex) 
+            { 
+                MessageBox.Show("Failed To Fetch Data, See Error Code: " + ex);
+            }
         }
 
-        private void wardListBx_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //updates displayed ward count
+        private void updateWardCount() 
         {
-            Ward selectedWard = (Ward)wardListBx.SelectedItem;
-            patientListBx.ItemsSource = selectedWard.Patients;
+            wardLabel.Content = $"Wards ({wards.Count})";
         }
 
+        //serializes ward collection and writes to json file
         private void saveDataBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            File.WriteAllText(jsonFilePath, JsonConvert.SerializeObject(wards));
+            updateWardCount();
         }
 
+        //deserializes json data
         private void loadDataBtn_Click(object sender, RoutedEventArgs e)
         {
-            initializeData();
+            deserializeData();
+            updateWardCount();
         }
 
+        //update displayed patients to match selected ward
+        private void wardListBx_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (wardListBx.SelectedItem != null)
+            {
+                Ward selectedWard = (Ward)wardListBx.SelectedItem;
+                patientListBx.ItemsSource = selectedWard.Patients;
+            }
+            else patientListBx.ItemsSource = null;
+        }
+
+        //update displayed patient name and blood type image to match selected patient
         private void patientListBx_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Patient selectedPatient = (Patient)patientListBx.SelectedItem;
-            if (selectedPatient != null)
+            if (patientListBx.SelectedItem != null)
             {
+                Patient selectedPatient = (Patient)patientListBx.SelectedItem;
                 patientNameLbl.Content = selectedPatient.Name;
-                string image = $"{selectedPatient.BloodType.ToString().ToLower()}.png";
-                bloodTypeImg.Source = new BitmapImage(new Uri($"pack://application:,,,/CA1;component/Images/{image}"));
+
+                if (selectedPatient.BloodType == EBloodType.Unknown) 
+                {
+                    bloodTypeImg.Source = null;
+                    return;
+                }
+
+                try
+                {
+                    string image = $"{selectedPatient.BloodType.ToString().ToLower()}.png";
+                    bloodTypeImg.Source = new BitmapImage(new Uri($"pack://application:,,,/CA1;component/images/{image}"));
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Failed To Retrieve Blood Type Image, See Error Code: " + ex);
+                }
             }
             else 
             {
@@ -86,82 +134,107 @@ namespace CA1
                 bloodTypeImg.Source = null;
             }
         }
-    }
 
-
-    public enum EBloodType 
-    {
-        A,
-        B,
-        AB,
-        O
-    }
-
-    public class Ward 
-    {
-        public int Capacity { get; set; }
-        public string Name { get; set; }
-        public ObservableCollection<Patient> Patients { get; set; }
-       
-        public Ward() { }
-
-
-        public Ward(int capacity, string name, ObservableCollection<Patient> patients)
+        //add a new ward to the ward collection
+        private void addWardBtn_Click(object sender, RoutedEventArgs e)
         {
-            Capacity = capacity;
-            Name = name;
-            Patients = patients;    
-        }
+            string name = wardNameTxtBx.Text;
+            int capacity = (int)wardCapacitySldr.Value;
 
-        public Ward(int capacity, string name) : this(capacity, name, new ObservableCollection<Patient>())
-        {
-        }
+            if (name == null || name == "") 
+            {
+                MessageBox.Show("A Name Must Be Given");
+                return;
+            }
 
-        public Ward(int capacity) : this(capacity, "", new ObservableCollection<Patient>()) 
-        {
+            wards.Add(new Ward(capacity, name));
+            updateWardCount();
         }
 
 
-        public override string ToString()
+        //remove the selected ward from the collection
+        private void removeDataBtn_Click(object sender, RoutedEventArgs e)
         {
-            return $"{Name}  Limit: {Capacity}";
+            if (wardListBx.SelectedItem != null)
+            {
+                Ward selectedWard = (Ward)wardListBx.SelectedItem;
+                wardListBx.SelectedItem = null;
+                wards.Remove(selectedWard);
+                updateWardCount();
+            }
+            else MessageBox.Show("Select A Ward To Remove");
         }
 
-    }
-
-    public class Patient
-    {
-        public DateTime DateOfBirth { get; set; }    
-        public EBloodType BloodType { get; set; }   
-        public string Name { get; set; }    
-
-        public Patient() { }
-
-        public Patient(DateTime dob, EBloodType bloodType, string name)
+        //add a new patient to the selected ward's patient collection
+        private void addPatientBtn_Click(object sender, RoutedEventArgs e)
         {
-            DateOfBirth = dob;
-            BloodType = bloodType;
-            Name = name;    
+            if (wardListBx.SelectedItem != null)
+            {
+                Ward selectedWard = (Ward)wardListBx.SelectedItem;
+
+                if (selectedWard.Patients.Count + 1 > selectedWard.Capacity)
+                {
+                    MessageBox.Show("Number Of Patients Would Exceed Ward Capacity");
+                    return;
+                }
+
+                Patient newPatient = new Patient();
+                DateTime dob = (DateTime)datePicker.SelectedDate;
+                String name = patientNameTxtBx.Text;
+
+                if (dob > DateTime.Now)
+                {
+                    MessageBox.Show("Invalid Date Selected");
+                    return;
+                }
+
+                if (name == null || name == "" || name.Any(char.IsDigit))
+                {
+                    MessageBox.Show("A Valid Name Must Be Given");
+                    return;
+                }
+
+                //I couldn't figure out how to handle the radio button values as a group, so resorted to if statements
+                EBloodType selectedBloodType;
+                if ((bool)bloodA_btn.IsChecked)
+                {
+                    selectedBloodType = EBloodType.A;
+                }
+                else if ((bool)bloodB_btn.IsChecked)
+                {
+                    selectedBloodType = EBloodType.B;
+                }
+                else if ((bool)bloodAB_btn.IsChecked)
+                {
+                    selectedBloodType = EBloodType.AB;
+                }
+                else if ((bool)bloodO_btn.IsChecked)
+                {
+                    selectedBloodType = EBloodType.O;
+                }
+                else
+                {
+                    newPatient = new Patient(name, dob);
+                    selectedWard.Patients.Add(newPatient);
+                    return;
+                }
+
+                newPatient = new Patient(dob, selectedBloodType, name);
+                selectedWard.Patients.Add(newPatient);
+            }
+            else MessageBox.Show("First Select A Ward To Add The New Patient To");
         }
 
-        public Patient(string name, DateTime dob) : this(dob, EBloodType.A, name)
+        //removes the selected patient from the currently selected ward's patient collection
+        private void removePatientBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (wardListBx.SelectedItem != null && patientListBx.SelectedItem != null) 
+            {
+                Ward selectedWard = (Ward)wardListBx.SelectedItem;
+                Patient selectedPatient = (Patient)patientListBx.SelectedItem;
+                selectedWard.Patients.Remove(selectedPatient);  
+            }
+            else MessageBox.Show("Select A Ward And Then The Patient To Remove");
         }
-
-        public Patient(string name) : this(DateTime.Now, EBloodType.A, name)
-        {
-        }
-
-        private int calculateAge() 
-        {
-            int age = DateTime.Now.Year - DateOfBirth.Year;
-            if (DateTime.Now.Month < DateOfBirth.Month || (DateTime.Now.Month == DateOfBirth.Month && DateTime.Now.Day < DateOfBirth.Day)) age--; 
-            return age;
-        }
-
-        public override string ToString()
-        {
-            return $"{Name} ({calculateAge()}) Type: {BloodType}";
-        }
-    }
+    }  
 }
