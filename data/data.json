@@ -1,0 +1,57 @@
+[
+  {
+    "Name": "Ward 1",
+    "Capacity": 20,
+    "Patients": [
+      {
+        "Name": "John Doe",
+        "DateOfBirth": "1990-12-31",
+        "BloodType": "A"
+      },
+      {
+        "Name": "Mary Jane",
+        "DateOfBirth": "1995-10-10",
+        "BloodType": "B"
+      },
+      {
+        "Name": "Mark Smith",
+        "DateOfBirth": "2000-09-05",
+        "BloodType": "AB"
+      }
+    ]
+  },
+  {
+    "Name": "Ward 2",
+    "Capacity": 15,
+    "Patients": [
+      {
+        "Name": "Shane Murphy",
+        "DateOfBirth": "1993-11-12",
+        "BloodType": "O"
+      },
+      {
+        "Name": "Holly Murphy",
+        "DateOfBirth": "1993-01-12",
+        "BloodType": "A"
+      }
+    ]
+  },
+  {
+    "Name": "Ward 3",
+    "Capacity": 7,
+    "Patients": [
+      {
+        "Name": "John Smith",
+        "DateOfBirth": "1985-05-25",
+        "BloodType": "A",
+        "Ward": "Ward 3"
+      },
+      {
+        "Name": "Emily Johnson",
+        "DateOfBirth": "1978-09-18",
+        "BloodType": "B",
+        "Ward": "Ward 3"
+      }
+    ]
+  }
+]
