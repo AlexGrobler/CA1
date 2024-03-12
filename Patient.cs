@@ -41,7 +41,10 @@ namespace CA1
         private int calculateAge()
         {
             int age = DateTime.Now.Year - DateOfBirth.Year;
-            if (DateTime.Now.Month < DateOfBirth.Month || (DateTime.Now.Month == DateOfBirth.Month && DateTime.Now.Day < DateOfBirth.Day)) age--;
+            if (DateTime.Now.Month < DateOfBirth.Month || (DateTime.Now.Month == DateOfBirth.Month && DateTime.Now.Day < DateOfBirth.Day))
+            { 
+                age--; 
+            }
             return age;
         }
 

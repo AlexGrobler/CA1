@@ -19,7 +19,6 @@ namespace CA1
         {
         }
 
-
         public Ward(int capacity, string name) : this(capacity, name, new ObservableCollection<Patient>())
         {
         }

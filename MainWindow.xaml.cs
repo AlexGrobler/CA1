@@ -165,6 +165,29 @@ namespace CA1
             else MessageBox.Show("Select A Ward To Remove");
         }
 
+        //I couldn't figure out how to handle the radio button values as a group, so resorted to if statements
+        private EBloodType getSelectedBloodType() 
+        {
+            EBloodType selectedBloodType = EBloodType.Unknown;
+            if ((bool)bloodA_btn.IsChecked)
+            {
+                selectedBloodType = EBloodType.A;
+            }
+            else if ((bool)bloodB_btn.IsChecked)
+            {
+                selectedBloodType = EBloodType.B;
+            }
+            else if ((bool)bloodAB_btn.IsChecked)
+            {
+                selectedBloodType = EBloodType.AB;
+            }
+            else if ((bool)bloodO_btn.IsChecked)
+            {
+                selectedBloodType = EBloodType.O;
+            }
+            return selectedBloodType;
+        }
+
         //add a new patient to the selected ward's patient collection
         private void addPatientBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -179,14 +202,15 @@ namespace CA1
                 }
 
                 Patient newPatient = new Patient();
-                DateTime dob = (DateTime)datePicker.SelectedDate;
                 String name = patientNameTxtBx.Text;
 
-                if (dob > DateTime.Now)
+                if (datePicker.SelectedDate == null || datePicker.SelectedDate > DateTime.Now)
                 {
                     MessageBox.Show("Invalid Date Selected");
                     return;
                 }
+
+                DateTime dob = (DateTime)datePicker.SelectedDate;
 
                 if (name == null || name == "" || name.Any(char.IsDigit))
                 {
@@ -194,32 +218,15 @@ namespace CA1
                     return;
                 }
 
-                //I couldn't figure out how to handle the radio button values as a group, so resorted to if statements
-                EBloodType selectedBloodType;
-                if ((bool)bloodA_btn.IsChecked)
-                {
-                    selectedBloodType = EBloodType.A;
-                }
-                else if ((bool)bloodB_btn.IsChecked)
-                {
-                    selectedBloodType = EBloodType.B;
-                }
-                else if ((bool)bloodAB_btn.IsChecked)
-                {
-                    selectedBloodType = EBloodType.AB;
-                }
-                else if ((bool)bloodO_btn.IsChecked)
-                {
-                    selectedBloodType = EBloodType.O;
-                }
-                else
+                EBloodType bloodType = getSelectedBloodType();
+                if (bloodType == EBloodType.Unknown)
                 {
                     newPatient = new Patient(name, dob);
                     selectedWard.Patients.Add(newPatient);
                     return;
                 }
 
-                newPatient = new Patient(dob, selectedBloodType, name);
+                newPatient = new Patient(dob, bloodType, name);
                 selectedWard.Patients.Add(newPatient);
             }
             else MessageBox.Show("First Select A Ward To Add The New Patient To");

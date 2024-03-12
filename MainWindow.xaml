@@ -7,7 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="460" Width="800"
         Loaded="Window_Loaded">
-    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.25*"/>
@@ -126,8 +125,8 @@
             <Label Style="{StaticResource TitleStyle}" VerticalAlignment="Center" Content="Details"></Label>
         </Border>
         <StackPanel Grid.Column="3" Grid.Row="1" Margin="5">
-            <Label Name="patientNameLbl" Content="" HorizontalAlignment="Center" Margin="0"></Label>
-            <Image Name="bloodTypeImg" MaxHeight="250" MaxWidth="250"  Stretch="Uniform" StretchDirection="UpOnly" Margin="5"></Image>
+            <Label Name="patientNameLbl" Content="" FontSize="16px" HorizontalAlignment="Center" Margin="0"></Label>
+            <Image Name="bloodTypeImg" MaxHeight="200" MaxWidth="200" Stretch="Uniform" StretchDirection="UpOnly" Margin="25"></Image>
         </StackPanel>
 
         <StackPanel Grid.Column="3" Grid.Row="2" VerticalAlignment="Bottom" Margin="5">
